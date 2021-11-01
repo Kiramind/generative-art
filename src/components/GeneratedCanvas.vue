@@ -1,7 +1,8 @@
 <style scoped>
 #myCanvas {
   border: black solid 1px;
-  width: 100%;
+  width: 500px;
+  height: 500px;
 }
 </style>
 <template>
