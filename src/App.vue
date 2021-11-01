@@ -14,32 +14,18 @@
           transition="scale-transition"
           width="40"
         />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <h2>Art Généré</h2>
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-main>
       <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
-      <Inputs v-bind:artModel="artModel" v-on:model-update="redraw()"/>
+      <Inputs
+        v-bind:artModel="artModel"
+        v-bind:seed="seed"
+        v-on:model-update="redraw()"/>
     </v-main>
   </v-app>
 </template>
@@ -85,21 +71,23 @@ export default {
         sides: 5,
       },
     },
-    seed: "default",
-    lastSeed: "default",
-    rand: Util.randFromSeed("default"),
+    seed:{ value: "Artiste"},
+    rand: Util.randFromSeed("Artiste"),
   }),
+  mounted: function() {
+    this.updateModel()
+  },
   methods: {
     updateModel() {
-      this.rand = Util.randFromSeed(this.seed)
+      let c = document.getElementById("myCanvas");
+      this.rand = Util.randFromSeed(this.seed.value)
       let newCenters = [];
       for (var i = 0; i < this.artModel.pattern.number; i++) {
         newCenters.push(new paper.Point(
-          Util.randomInt(this.rand, 500),
-          Util.randomInt(this.rand, 500))
+          Util.randomInt(this.rand, c.width),
+          Util.randomInt(this.rand, c.height))
         )
       }
-      console.log(newCenters)
       this.artModel.pattern.centers = newCenters
     },
     redraw() {

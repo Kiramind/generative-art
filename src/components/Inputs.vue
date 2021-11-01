@@ -117,6 +117,11 @@
       ></v-slider>
     </v-list-item-content>
   </v-list-item>
+  <v-list-item>
+    <v-list-item-content>
+      <v-text-field v-model="seed.value" label="Aléatoire"></v-text-field>
+    </v-list-item-content>
+  </v-list-item>
 </v-card>
   </v-container>
 </template>
@@ -125,7 +130,7 @@
   // import Util from '../util/util.js'
 
   export default {
-    props: ['artModel'],
+    props: ['artModel', 'seed'],
     name: 'Inputs',
     data: () => ({
       patternTypes: ['rectangle', 'cercle', 'éllipse', 'polygone', 'étoile'],

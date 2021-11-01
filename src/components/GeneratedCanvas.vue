@@ -1,8 +1,13 @@
+<style scoped>
+#myCanvas {
+  border: black solid 1px;
+  width: 100%;
+}
+</style>
 <template>
   <v-container>
   <canvas
-    id="myCanvas"
-    style="border: black solid 1px; width: 500px; height: 500px;" resize>
+    id="myCanvas" resize>
   </canvas>
   </v-container>
 </template>
@@ -21,7 +26,7 @@
       this.draw()
     },
     updated: function() {
-      console.log("updated Canvas") // XXX TODEL
+      // console.log("updated Canvas") // XXX TODEL
     },
     methods: {
       reset() {
