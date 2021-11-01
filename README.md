@@ -1,5 +1,10 @@
 # generative-art
 
+## Project deploy
+```
+yarn deploy
+```
+
 ## Project setup
 ```
 yarn install
