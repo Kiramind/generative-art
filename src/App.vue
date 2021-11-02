@@ -20,8 +20,15 @@
 
       <v-spacer></v-spacer>
     </v-app-bar>
-    <v-navigation-drawer app permanent right clipped expand-on-hover>
+    <v-navigation-drawer
+      app permanent right clipped
+      :mini-variant.sync="miniParam">
       <v-list-item>
+        <v-list-item-icon>
+          <v-btn icon @click.stop="toggleMini">
+          <v-icon>mdi-cog</v-icon>
+        </v-btn>
+        </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
             Parametres
@@ -32,12 +39,22 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <v-treeview
-        selection-type="leaf"
-        v-model="paramSelection"
-        selectable
-        :items="paramNodes"
-      ></v-treeview>
+      <v-list-item>
+        <v-list-item-icon v-if="miniParam">
+          <v-btn icon @click.stop="toggleMini">
+          <v-icon>mdi-tune</v-icon>
+        </v-btn>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-treeview
+            selection-type="leaf"
+            v-model="paramSelection"
+            selectable
+            :items="paramNodes"
+          ></v-treeview>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
     </v-navigation-drawer>
     <v-main>
       <v-container fluid>
@@ -97,11 +114,12 @@ export default {
     rand: Util.randFromSeed("Artiste"),
     overlay: true,
     absolute: true,
+    miniParam: true,
     paramSelection: [],
     paramNodes: [
             {
               id: 'pattern',
-              name: 'Motif',
+              name: 'Motifs',
               children: [
                 { id: 'fillColor', name: 'remplissage', selected: true},
                 { id: 'borderColor', name: 'bordure' },
@@ -112,12 +130,8 @@ export default {
           ],
   }),
   mounted: function() {
-    // window.addEventListener('resize', this.updateModel)
     window.addEventListener('resize', () => this.redraw())
     this.updateModel()
-  },
-  updated: function() {
-    console.log(this.paramSelection)
   },
   methods: {
     updateModel() {
@@ -134,11 +148,16 @@ export default {
     },
     redraw() {
       this.updateModel()
-      this.$refs.canvas.draw()
+      if (this.$refs.canvas) {
+        this.$refs.canvas.draw()
+      }
     },
     start() {
       this.redraw()
       this.overlay = false
+    },
+    toggleMini() {
+      this.miniParam = !this.miniParam
     }
   },
 };

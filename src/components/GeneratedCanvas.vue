@@ -2,6 +2,7 @@
 #myCanvas {
   border: black solid 1px;
   width: 100%;
+  height: 50%;
 }
 </style>
 <template>
