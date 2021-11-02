@@ -1,128 +1,146 @@
 <template>
-  <v-container>
-    <v-card
-  max-width="300"
-  outlined
->
-  <v-list-item>
-    <v-list-item-content>
-      <div class="text-overline mb-4">
-        Motif
-      </div>
-      <p>Remplissage</p>
-      <v-color-picker
-        dot-size="25"
-        swatches-max-height="200"
-        hide-inputs
-        v-model="artModel.pattern.fillColor"
-      ></v-color-picker>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item>
-    <v-list-item-content>
-      <p>Ligne</p>
-      <v-color-picker
-        dot-size="25"
-        swatches-max-height="200"
-        hide-inputs
-        v-model="artModel.pattern.strokeColor"
-      ></v-color-picker>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item>
-    <v-list-item-content>
-      <v-select
-        :items="patternTypes"
-        label="Type"
-        outlined
-        v-model="artModel.pattern.type"
-      ></v-select>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item>
-    <v-list-item-content>
-      <v-slider
-        v-model="artModel.pattern.number"
-        label="Densité"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="100"
-        min="10"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item v-if="showWidth()">
-    <v-list-item-content>
-      <v-slider
-        v-model="artModel.pattern.width"
-        label="Largeur"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="50"
-        min="5"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item v-if="showHeight()">
-    <v-list-item-content>
-      <v-slider
-        v-model="artModel.pattern.height"
-        label="Longueur"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="50"
-        min="5"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item v-if="showRadius1()">
-    <v-list-item-content>
-      <v-slider
-        v-model="artModel.pattern.radius1"
-        label="Rayon"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="50"
-        min="5"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item v-if="showRadius2()">
-    <v-list-item-content>
-      <v-slider
-        v-model="artModel.pattern.radius2"
-        label="Rayon 2"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="50"
-        min="5"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item>
-    <v-list-item-content v-if="showSides()">
-      <v-slider
-        v-model="artModel.pattern.sides"
-        label="Pointes"
-        :thumb-size="16"
-        thumb-label="always"
-        height="40"
-        max="10"
-        min="3"
-      ></v-slider>
-    </v-list-item-content>
-  </v-list-item>
-  <v-list-item>
-    <v-list-item-content>
-      <v-text-field v-model="seed.value" label="Aléatoire"></v-text-field>
-    </v-list-item-content>
-  </v-list-item>
-</v-card>
+  <v-container fluid>
+    <v-row dense>
+      <v-col v-if="showFillColor()">
+      <v-card outlined>
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Remplissage</div>
+            <v-color-picker
+              dot-size="25"
+              swatches-max-height="200"
+              hide-inputs
+              v-model="artModel.pattern.fillColor"
+            ></v-color-picker>
+          </v-list-item-content>
+        </v-list-item>
+        </v-card>
+      </v-col>
+      <v-col v-if="showBorderColor()">
+        <v-card outlined>
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Ligne</div>
+            <v-color-picker
+              dot-size="25"
+              swatches-max-height="200"
+              hide-inputs
+              v-model="artModel.pattern.strokeColor"
+            ></v-color-picker>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showShapeTypes()">
+      <v-card outlined>
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Formes</div>
+            <v-select
+              :items="patternTypes"
+              label="Type"
+              outlined
+              v-model="artModel.pattern.type"
+              dense
+            ></v-select>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-text-field v-model="seed.value" label="Position"></v-text-field>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showShapeDetails()">
+      <v-card outlined min-width="300">
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Details</div>
+            <v-slider
+              v-model="artModel.pattern.number"
+              label="Densité"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="100"
+              min="10"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showWidth()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.pattern.width"
+              label="Largeur"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="50"
+              min="5"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showHeight()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.pattern.height"
+              label="Longueur"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="50"
+              min="5"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showRadius1()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.pattern.radius1"
+              label="Rayon"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="50"
+              min="5"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showRadius2()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.pattern.radius2"
+              label="Rayon 2"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="50"
+              min="5"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showSides()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.pattern.sides"
+              label="Pointes"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="10"
+              min="3"
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -130,7 +148,7 @@
   // import Util from '../util/util.js'
 
   export default {
-    props: ['artModel', 'seed'],
+    props: ['artModel', 'seed', 'paramSelection'],
     name: 'Inputs',
     data: () => ({
       patternTypes: ['rectangle', 'cercle', 'éllipse', 'polygone', 'étoile'],
@@ -139,6 +157,10 @@
       this.$emit("model-update");
     },
     methods: {
+      showFillColor() {return this.paramSelection.includes('fillColor')},
+      showBorderColor() {return this.paramSelection.includes('borderColor')},
+      showShapeTypes() {return this.paramSelection.includes('shapeTypes')},
+      showShapeDetails() {return this.paramSelection.includes('shapeDetails')},
       showWidth() {
         switch (this.artModel.pattern.type) {
           case "éllipse":

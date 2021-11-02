@@ -4,6 +4,8 @@
       app
       color="primary"
       dark
+      clipped-right
+      expand-on-hover
     >
       <div class="d-flex align-center">
         <v-img
@@ -19,24 +21,45 @@
 
       <v-spacer></v-spacer>
     </v-app-bar>
-
+    <v-navigation-drawer app permanent right clipped>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6">
+            Parametres
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            modifier les parametres d'entrée
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-treeview
+        selection-type="leaf"
+        v-model="paramSelection"
+        selectable
+        :items="paramNodes"
+      ></v-treeview>
+    </v-navigation-drawer>
     <v-main>
-      <v-overlay
-        :absolute="absolute"
-        opacity="0.74"
-        :value="overlay"
-      >
-        <v-btn
-          color="orange lighten-2"
-          @click="start">
-          Commencer...
-        </v-btn>
-      </v-overlay>
-      <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
-      <Inputs
-        v-bind:artModel="artModel"
-        v-bind:seed="seed"
-        v-on:model-update="redraw()"/>
+      <v-container fluid>
+        <v-overlay
+          :absolute="absolute"
+          opacity="0.74"
+          :value="overlay"
+        >
+          <v-btn
+            color="orange lighten-2"
+            @click="start">
+            Commencer...
+          </v-btn>
+        </v-overlay>
+        <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
+        <Inputs
+          v-bind:artModel="artModel"
+          v-bind:seed="seed"
+          v-bind:paramSelection="paramSelection"
+          v-on:model-update="redraw()"/>
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -75,11 +98,27 @@ export default {
     rand: Util.randFromSeed("Artiste"),
     overlay: true,
     absolute: true,
+    paramSelection: [],
+    paramNodes: [
+            {
+              id: 'pattern',
+              name: 'Motif',
+              children: [
+                { id: 'fillColor', name: 'remplissage', selected: true},
+                { id: 'borderColor', name: 'bordure' },
+                { id: 'shapeTypes', name: 'formes' },
+                { id: 'shapeDetails', name: 'details' },
+              ],
+            },
+          ],
   }),
   mounted: function() {
     // window.addEventListener('resize', this.updateModel)
     window.addEventListener('resize', () => this.redraw())
     this.updateModel()
+  },
+  updated: function() {
+    console.log(this.paramSelection)
   },
   methods: {
     updateModel() {
@@ -92,7 +131,6 @@ export default {
           Util.randomInt(this.rand, c.clientHeight))
         )
       }
-      console.log(newCenters)
       this.artModel.pattern.centers = newCenters
     },
     redraw() {
