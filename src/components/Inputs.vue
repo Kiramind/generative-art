@@ -152,7 +152,6 @@
         switch (this.artModel.pattern.type) {
           case "éllipse":
           case "rectangle":
-          case "polygone":
             return true
           default:
           return false
@@ -162,6 +161,7 @@
         switch (this.artModel.pattern.type) {
           case "cercle":
           case "étoile":
+          case "polygone":
             return true
           default:
           return false
