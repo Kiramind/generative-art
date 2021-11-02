@@ -48,16 +48,16 @@ export default {
       pattern: {
         type: "rectangle",
         centers: [
-          new paper.Point(30,30),
-          new paper.Point(350,50),
-          new paper.Point(210,50),
-          new paper.Point(24,123),
-          new paper.Point(415,12),
-          new paper.Point(333,321),
-          new paper.Point(89,123),
-          new paper.Point(177,222),
-          new paper.Point(200,89),
-          new paper.Point(250,400),
+          new paper.Point(169,122),
+          new paper.Point(162,214),
+          new paper.Point(301,194),
+          new paper.Point(141,299),
+          new paper.Point(303,222),
+          new paper.Point(282,337),
+          new paper.Point(628,255),
+          new paper.Point(257,113),
+          new paper.Point(467,196),
+          new paper.Point(510,270),
         ],
         fillColor: "#67FBFBDD",
         number: 10,
@@ -75,6 +75,8 @@ export default {
     rand: Util.randFromSeed("Artiste"),
   }),
   mounted: function() {
+    // window.addEventListener('resize', this.updateModel)
+    window.addEventListener('resize', () => this.redraw())
     this.updateModel()
   },
   methods: {
@@ -84,10 +86,11 @@ export default {
       let newCenters = [];
       for (var i = 0; i < this.artModel.pattern.number; i++) {
         newCenters.push(new paper.Point(
-          Util.randomInt(this.rand, c.width),
-          Util.randomInt(this.rand, c.height))
+          Util.randomInt(this.rand, c.clientWidth),
+          Util.randomInt(this.rand, c.clientHeight))
         )
       }
+      console.log(newCenters)
       this.artModel.pattern.centers = newCenters
     },
     redraw() {
