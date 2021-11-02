@@ -21,6 +21,17 @@
     </v-app-bar>
 
     <v-main>
+      <v-overlay
+        :absolute="absolute"
+        opacity="0.74"
+        :value="overlay"
+      >
+        <v-btn
+          color="orange lighten-2"
+          @click="start">
+          Commencer...
+        </v-btn>
+      </v-overlay>
       <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
       <Inputs
         v-bind:artModel="artModel"
@@ -47,18 +58,7 @@ export default {
     artModel: {
       pattern: {
         type: "rectangle",
-        centers: [
-          new paper.Point(169,122),
-          new paper.Point(162,214),
-          new paper.Point(301,194),
-          new paper.Point(141,299),
-          new paper.Point(303,222),
-          new paper.Point(282,337),
-          new paper.Point(628,255),
-          new paper.Point(257,113),
-          new paper.Point(467,196),
-          new paper.Point(510,270),
-        ],
+        centers: [],
         fillColor: "#67FBFBDD",
         number: 10,
         strokeWidth: 2,
@@ -73,6 +73,8 @@ export default {
     },
     seed:{ value: "Artiste"},
     rand: Util.randFromSeed("Artiste"),
+    overlay: true,
+    absolute: true,
   }),
   mounted: function() {
     // window.addEventListener('resize', this.updateModel)
@@ -97,6 +99,10 @@ export default {
       this.updateModel()
       this.$refs.canvas.draw()
     },
+    start() {
+      this.redraw()
+      this.overlay = false
+    }
   },
 };
 </script>
