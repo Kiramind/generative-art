@@ -5,7 +5,6 @@
       color="primary"
       dark
       clipped-right
-      expand-on-hover
     >
       <div class="d-flex align-center">
         <v-img
@@ -21,7 +20,7 @@
 
       <v-spacer></v-spacer>
     </v-app-bar>
-    <v-navigation-drawer app permanent right clipped>
+    <v-navigation-drawer app permanent right clipped expand-on-hover>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
