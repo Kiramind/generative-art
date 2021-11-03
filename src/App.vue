@@ -109,12 +109,24 @@ export default {
         radius2: 10,
         sides: 5,
       },
+      backgroundLines: {
+        number: 30,
+        spread: 2.0,
+        angle: 30,
+        gap: 20,
+        strokeWidth: 2,
+        strokeColor: "#67BFFBDD",
+        dashLength: 4,
+        dashGap: 4,
+        strokeCap: 'round' //'round', 'square', 'butt'
+      }
     },
     seed:{ value: "Artiste"},
     rand: Util.randFromSeed("Artiste"),
     overlay: true,
     absolute: true,
     miniParam: true,
+    canvas: null,
     paramSelection: [],
     paramNodes: [
             {
@@ -135,13 +147,13 @@ export default {
   },
   methods: {
     updateModel() {
-      let c = document.getElementById("myCanvas");
+      this.canvas = document.getElementById("myCanvas");
       this.rand = Util.randFromSeed(this.seed.value)
       let newCenters = [];
       for (var i = 0; i < this.artModel.pattern.number; i++) {
         newCenters.push(new paper.Point(
-          Util.randomInt(this.rand, c.clientWidth),
-          Util.randomInt(this.rand, c.clientHeight))
+          Util.randomInt(this.rand, this.canvas.clientWidth),
+          Util.randomInt(this.rand, this.canvas.clientHeight))
         )
       }
       this.artModel.pattern.centers = newCenters
