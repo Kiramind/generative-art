@@ -59,8 +59,8 @@
         var paths = [];
         let lineModel = this.artModel.backgroundLines;
         for (var i = 0; i < lineModel.number; i++) {
-          var path1 = this.backgroundLinePath(lineModel.angle, Math.pow(i,lineModel.spread) * lineModel.gap);
-          var path2 = this.backgroundLinePath(lineModel.angle, Math.pow(i,lineModel.spread) * -lineModel.gap);
+          var path1 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * lineModel.gap);
+          var path2 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * -lineModel.gap);
 
           paths.push(path1, path2);
         }

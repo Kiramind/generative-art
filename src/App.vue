@@ -111,6 +111,7 @@ export default {
       },
       backgroundLines: {
         number: 30,
+        start: 100,
         spread: 2.0,
         angle: 30,
         gap: 20,
