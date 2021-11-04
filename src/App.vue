@@ -140,6 +140,14 @@ export default {
                 { id: 'shapeDetails', name: 'details' },
               ],
             },
+            {
+              id: 'lines',
+              name: 'Lignes',
+              children: [
+                { id: 'bckgLinePosition', name: 'position', selected: false},
+                { id: 'bckgLineDetails', name: 'détails' },
+              ],
+            },
           ],
   }),
   mounted: function() {

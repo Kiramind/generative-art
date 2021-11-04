@@ -68,8 +68,12 @@
       },
       backgroundLinePath(angle, delta){
         let c = document.getElementById("myCanvas");
-        var line = paper.Path.Line(new paper.Point(0,0), new paper.Point(c.clientWidth, c.clientHeight));
-        line.rotate(45); //XXX see starting point.
+        let line = paper.Path.Line(
+          new paper.Point(c.clientWidth/2,-c.clientHeight),
+          new paper.Point(c.clientWidth/2, 2 * c.clientHeight)
+        );
+
+        // line.rotate(45); //XXX see starting point.
         line.rotate(angle);
         line.translate(new paper.Point(delta * Util.cosDeg(angle), delta * Util.sinDeg(angle)));
 

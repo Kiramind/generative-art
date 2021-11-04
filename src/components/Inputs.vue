@@ -141,11 +141,11 @@
       </v-card>
     </v-col>
     <!-- XXX -->
-    <v-col v-if="showLineDetails()">
-      <v-card outlined>
+    <v-col v-if="showLinePosition()">
+      <v-card min-width="300" outlined>
         <v-list-item>
           <v-list-item-content>
-            <div class="text-overline mb-4">Details Lignes</div>
+            <div class="text-overline mb-4">Position Lignes</div>
             <v-slider
               v-model="artModel.backgroundLines.angle"
               label="Angle"
@@ -174,6 +174,26 @@
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
+            <v-slider
+              v-model="artModel.backgroundLines.spread"
+              label="Ecart"
+              step="0.1"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="5"
+              min="1"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showLineDetails()">
+      <v-card min-width="300" outlined>
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Details Lignes</div>
             <v-slider
               v-model="artModel.backgroundLines.strokeWidth"
               label="Epaisseur"
@@ -214,21 +234,6 @@
             ></v-slider>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-slider
-              v-model="artModel.backgroundLines.spread"
-              label="Ecart"
-              step="0.1"
-              :thumb-size="16"
-              thumb-label="always"
-              height="40"
-              max="5"
-              min="1"
-              dense
-            ></v-slider>
-          </v-list-item-content>
-        </v-list-item>
       </v-card>
     </v-col>
     <!-- XXX -->
@@ -253,7 +258,8 @@
       showBorderColor() {return this.paramSelection.includes('borderColor')},
       showShapeTypes() {return this.paramSelection.includes('shapeTypes')},
       showShapeDetails() {return this.paramSelection.includes('shapeDetails')},
-      showLineDetails() {return true}, //XXX Todo
+      showLinePosition() {return this.paramSelection.includes('bckgLinePosition')},
+      showLineDetails() {return this.paramSelection.includes('bckgLineDetails')},
       showWidth() {
         switch (this.artModel.pattern.type) {
           case "éllipse":
