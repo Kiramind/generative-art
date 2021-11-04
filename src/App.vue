@@ -99,7 +99,7 @@ export default {
         type: "rectangle",
         centers: [],
         fillColor: "#67FBFBDD",
-        number: 10,
+        number: 20,
         strokeWidth: 2,
         strokeColor: "#000000FF",
         rotationIncr: 5,
@@ -120,7 +120,16 @@ export default {
         dashLength: 4,
         dashGap: 4,
         strokeCap: 'round' //'round', 'square', 'butt'
-      }
+      },
+      background: {
+        angle: -30,
+        nbColor: 3,
+        color1: "#67BFFBDD",
+        color2: "#6722FBDD",
+        color3: "#67BF11DD",
+        colorStops: [0.25,0.75],
+        radial: true,
+      },
     },
     seed:{ value: "Artiste"},
     rand: Util.randFromSeed("Artiste"),
@@ -128,13 +137,13 @@ export default {
     absolute: true,
     miniParam: true,
     canvas: null,
-    paramSelection: [],
+    paramSelection: ['bckgLinePosition', 'fillColor'],
     paramNodes: [
             {
               id: 'pattern',
               name: 'Motifs',
               children: [
-                { id: 'fillColor', name: 'remplissage', selected: true},
+                { id: 'fillColor', name: 'remplissage'},
                 { id: 'borderColor', name: 'bordure' },
                 { id: 'shapeTypes', name: 'formes' },
                 { id: 'shapeDetails', name: 'details' },
@@ -144,8 +153,17 @@ export default {
               id: 'lines',
               name: 'Lignes',
               children: [
-                { id: 'bckgLinePosition', name: 'position', selected: false},
+                { id: 'bckgLinePosition', name: 'position'},
                 { id: 'bckgLineDetails', name: 'détails' },
+                { id: 'bckgLineColor', name: 'couleur' },
+              ],
+            },
+            {
+              id: 'background',
+              name: 'Fond',
+              children: [
+                { id: 'bckgDetails', name: 'détails' },
+                { id: 'bckgColor', name: 'couleur' },
               ],
             },
           ],

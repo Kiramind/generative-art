@@ -140,7 +140,6 @@
         </v-list-item>
       </v-card>
     </v-col>
-    <!-- XXX -->
     <v-col v-if="showLinePosition()">
       <v-card min-width="300" outlined>
         <v-list-item>
@@ -236,6 +235,115 @@
         </v-list-item>
       </v-card>
     </v-col>
+    <v-col v-if="showLineColor()">
+    <v-card outlined>
+      <v-list-item>
+        <v-list-item-content>
+          <div class="text-overline mb-4">Couleur de Lignes</div>
+          <v-color-picker
+            dot-size="25"
+            swatches-max-height="200"
+            hide-inputs
+            v-model="artModel.backgroundLines.strokeColor"
+          ></v-color-picker>
+        </v-list-item-content>
+      </v-list-item>
+      </v-card>
+    </v-col>
+    <!-- XXX -->
+    <v-col v-if="showBckgDetails()">
+      <v-card min-width="300" outlined>
+        <v-list-item>
+          <v-list-item-content>
+            <div class="text-overline mb-4">Détails Fond</div>
+            <v-switch v-model="artModel.background.radial" label="Radial"></v-switch>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="showBckgAngle()">
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.background.angle"
+              label="Angle"
+              :thumb-size="16"
+              thumb-label="always"
+              height="40"
+              max="359"
+              min="0"
+              dense
+            ></v-slider>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-slider
+              v-model="artModel.background.nbColor"
+              label="NbColor"
+              :thumb-size="16"
+              :tick-labels="[1,2,3]"
+              height="40"
+              max="3"
+              min="1"
+              dense
+            ></v-slider>
+            <v-range-slider
+              v-model="artModel.background.colorStops"
+              label="Position couleur"
+              :thumb-size="16"
+              step="0.05"
+              height="40"
+              max="1"
+              min="0"
+              dense
+            ></v-range-slider>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showBckgColor(1)">
+    <v-card outlined>
+      <v-list-item>
+        <v-list-item-content>
+          <div class="text-overline mb-4">Couleur de fond 1</div>
+          <v-color-picker
+            dot-size="25"
+            swatches-max-height="200"
+            hide-inputs
+            v-model="artModel.background.color1"
+          ></v-color-picker>
+        </v-list-item-content>
+      </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showBckgColor(2)">
+    <v-card outlined>
+      <v-list-item>
+        <v-list-item-content>
+          <div class="text-overline mb-4">Couleur de fond 2</div>
+          <v-color-picker
+            dot-size="25"
+            swatches-max-height="200"
+            hide-inputs
+            v-model="artModel.background.color2"
+          ></v-color-picker>
+        </v-list-item-content>
+      </v-list-item>
+      </v-card>
+    </v-col>
+    <v-col v-if="showBckgColor(3)">
+    <v-card outlined>
+      <v-list-item>
+        <v-list-item-content>
+          <div class="text-overline mb-4">Couleur de fond 3</div>
+          <v-color-picker
+            dot-size="25"
+            swatches-max-height="200"
+            hide-inputs
+            v-model="artModel.background.color3"
+          ></v-color-picker>
+        </v-list-item-content>
+      </v-list-item>
+      </v-card>
+    </v-col>
     <!-- XXX -->
     </v-row>
   </v-container>
@@ -260,6 +368,13 @@
       showShapeDetails() {return this.paramSelection.includes('shapeDetails')},
       showLinePosition() {return this.paramSelection.includes('bckgLinePosition')},
       showLineDetails() {return this.paramSelection.includes('bckgLineDetails')},
+      showLineColor() {return this.paramSelection.includes('bckgLineColor')},
+      showBckgColor(n) {
+        return this.paramSelection.includes('bckgColor')
+          && this.artModel.background.nbColor >= n
+      },
+      showBckgDetails() {return this.paramSelection.includes('bckgDetails')},
+      showBckgAngle() {return !this.artModel.background.radial},
       showWidth() {
         switch (this.artModel.pattern.type) {
           case "éllipse":

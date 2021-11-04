@@ -37,10 +37,58 @@
         console.log(this.artModel.pattern)
       },
       draw() {
+        let c = document.getElementById("myCanvas");
         paper.project.activeLayer.removeChildren();
-        this.drawLineBackground()
+        this.drawBackground(c)
+        this.drawLineBackground(c)
         this.drawPattern()
         paper.view.draw()
+      },
+      drawBackground(canvas) {
+        let bckgModel = this.artModel.background;
+        let center = [canvas.clientWidth / 2, canvas.clientHeight / 2]
+        let bound = new paper.Path.Rectangle(
+          [0,0],
+          new paper.Size(canvas.clientWidth+5, canvas.clientHeight+5)
+        );
+        let direction = new paper.Path.Line(
+          [
+            center[0],
+            - canvas.clientHeight,
+          ],
+          [
+            center[0],
+            2 * canvas.clientHeight,
+          ],
+        );
+        direction.rotate(bckgModel.angle, center)
+        let intersections = bound.getIntersections(direction)
+        bound.fillColor = {
+          gradient: {
+              stops: this.backgroundStops(),
+              radial: bckgModel.radial
+          },
+          origin: bckgModel.radial ? center : intersections[0].point,
+          destination: bckgModel.radial ? [0,0]: intersections[1].point
+        }
+      },
+      backgroundStops(){
+        let bckgModel = this.artModel.background;
+        let stops = []
+        if (bckgModel.nbColor == 1) {
+          stops.push([[bckgModel.color1, bckgModel.colorStops[0]]])
+          stops.push([[bckgModel.color1, bckgModel.colorStops[1]]])
+        }
+        if (bckgModel.nbColor == 2) {
+          stops.push([[bckgModel.color1, bckgModel.colorStops[0]]])
+          stops.push([[bckgModel.color2, bckgModel.colorStops[1]]])
+        }
+        if (bckgModel.nbColor == 3) {
+          stops.push([[bckgModel.color1, bckgModel.colorStops[0]]])
+          stops.push([[bckgModel.color2, 0.5]])
+          stops.push([[bckgModel.color3, bckgModel.colorStops[1]]])
+        }
+        return stops
       },
       drawPattern() {
         var paths = [];
@@ -55,25 +103,23 @@
         }
         return paths
       },
-      drawLineBackground(){
+      drawLineBackground(canvas){
         var paths = [];
         let lineModel = this.artModel.backgroundLines;
         for (var i = 0; i < lineModel.number; i++) {
-          var path1 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * lineModel.gap);
-          var path2 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * -lineModel.gap);
+          var path1 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * lineModel.gap, canvas);
+          var path2 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * -lineModel.gap, canvas);
 
           paths.push(path1, path2);
         }
         return paths;
       },
-      backgroundLinePath(angle, delta){
-        let c = document.getElementById("myCanvas");
+      backgroundLinePath(angle, delta, canvas){
         let line = paper.Path.Line(
-          new paper.Point(c.clientWidth/2,-c.clientHeight),
-          new paper.Point(c.clientWidth/2, 2 * c.clientHeight)
+          new paper.Point(canvas.clientWidth/2,-canvas.clientHeight),
+          new paper.Point(canvas.clientWidth/2, 2 * canvas.clientHeight)
         );
 
-        // line.rotate(45); //XXX see starting point.
         line.rotate(angle);
         line.translate(new paper.Point(delta * Util.cosDeg(angle), delta * Util.sinDeg(angle)));
 
