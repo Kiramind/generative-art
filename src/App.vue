@@ -55,8 +55,8 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <v-list-item>
-        <v-list-item-icon>
+      <!-- <v-list-item> -->
+        <!-- <v-list-item-icon>
           <v-btn icon @click.stop="toggleMini">
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
@@ -68,7 +68,7 @@
             </v-btn>
           </v-list-item-title>
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item> -->
     </v-navigation-drawer>
     <v-main>
       <v-container fluid>
@@ -84,6 +84,10 @@
           </v-btn>
         </v-overlay>
         <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
+        <v-btn
+          color="orange lighten-2" @click="save">
+          Sauvegarder
+        </v-btn>
         <Inputs
           v-bind:artModel="artModel"
           v-bind:seed="seed"
@@ -124,7 +128,7 @@ export default {
         sides: 5,
       },
       backgroundLines: {
-        number: 30,
+        number: 50,
         start: 100,
         spread: 2.0,
         angle: 30,
@@ -215,7 +219,11 @@ export default {
     save() {
       let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
       window.location.href=image;
-    }
+      this.printModel()
+    },
+    printModel() {
+      console.log(this.artModel)
+    },
   },
 };
 </script>

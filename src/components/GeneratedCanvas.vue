@@ -33,9 +33,6 @@
       reset() {
         paper.project.activeLayer.removeChildren();
       },
-      printModel() {
-        console.log(this.artModel.pattern)
-      },
       draw() {
         let c = document.getElementById("myCanvas");
         paper.project.activeLayer.removeChildren();
@@ -106,7 +103,10 @@
       drawLineBackground(canvas){
         var paths = [];
         let lineModel = this.artModel.backgroundLines;
-        for (var i = 0; i < lineModel.number; i++) {
+        paths.push(this.backgroundLinePath(lineModel.angle, lineModel.start, canvas));
+        paths.push(this.backgroundLinePath(lineModel.angle, lineModel.start + lineModel.spread * lineModel.gap, canvas));
+        paths.push(this.backgroundLinePath(lineModel.angle, lineModel.start + lineModel.spread * -lineModel.gap, canvas));
+        for (var i = 2; i < lineModel.number; i++) {
           var path1 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * lineModel.gap, canvas);
           var path2 = this.backgroundLinePath(lineModel.angle, lineModel.start + Math.pow(i,lineModel.spread) * -lineModel.gap, canvas);
 
