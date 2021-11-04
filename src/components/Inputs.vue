@@ -199,7 +199,7 @@
               :thumb-size="16"
               thumb-label="always"
               height="40"
-              max="10"
+              max="50"
               min="0"
               dense
             ></v-slider>
@@ -213,7 +213,7 @@
               :thumb-size="16"
               thumb-label="always"
               height="40"
-              max="50"
+              max="100"
               min="0"
               dense
             ></v-slider>
