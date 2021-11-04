@@ -26,8 +26,8 @@
       <v-list-item>
         <v-list-item-icon>
           <v-btn icon @click.stop="toggleMini">
-          <v-icon>mdi-cog</v-icon>
-        </v-btn>
+            <v-icon>mdi-cog</v-icon>
+          </v-btn>
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
@@ -42,8 +42,8 @@
       <v-list-item>
         <v-list-item-icon v-if="miniParam">
           <v-btn icon @click.stop="toggleMini">
-          <v-icon>mdi-tune</v-icon>
-        </v-btn>
+            <v-icon>mdi-tune</v-icon>
+          </v-btn>
         </v-list-item-icon>
         <v-list-item-content>
           <v-treeview
@@ -55,6 +55,20 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
+      <v-list-item>
+        <v-list-item-icon>
+          <v-btn icon @click.stop="toggleMini">
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6">
+            <v-btn @click="save">
+              Sauvegarder
+            </v-btn>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
     <v-main>
       <v-container fluid>
@@ -197,6 +211,10 @@ export default {
     },
     toggleMini() {
       this.miniParam = !this.miniParam
+    },
+    save() {
+      let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+      window.location.href=image;
     }
   },
 };
