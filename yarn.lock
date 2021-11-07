@@ -8458,6 +8458,11 @@
     "vue-hot-reload-api" "^2.3.0"
     "vue-style-loader" "^4.1.0"
 
+"vue-router@^3.5.3":
+  "integrity" "sha1-BBBIBT4zaCnQXa+s9qj7ZpoueZk="
+  "resolved" "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/vue-router/-/vue-router-3.5.3.tgz"
+  "version" "3.5.3"
+
 "vue-style-loader@^4.1.0", "vue-style-loader@^4.1.2":
   "integrity" "sha512-sFuh0xfbtpRlKfm39ss/ikqs9AbKCoXZBpHeVZ8Tx650o0k0q/YCM7FRvigtxpACezfq6af+a7JeqVTWvncqDg=="
   "resolved" "https://registry.npmjs.org/vue-style-loader/-/vue-style-loader-4.1.3.tgz"

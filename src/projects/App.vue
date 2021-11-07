@@ -55,18 +55,15 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <!-- <v-list-item> -->
-        <!-- <v-list-item-icon>
+      <!-- ROUTING XXX -->
+      <!-- <v-list-item>
+        <v-list-item-icon v-if="miniParam">
           <v-btn icon @click.stop="toggleMini">
-            <v-icon>mdi-content-save</v-icon>
+            <v-icon>mdi-soccer</v-icon>
           </v-btn>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            <v-btn @click="save">
-              Sauvegarder
-            </v-btn>
-          </v-list-item-title>
+          <router-link to="/foo">/foo</router-link>
         </v-list-item-content>
       </v-list-item> -->
     </v-navigation-drawer>
@@ -99,9 +96,9 @@
 </template>
 
 <script>
-import GeneratedCanvas from './components/GeneratedCanvas';
-import Inputs from './components/Inputs';
-import Util from './util/util.js'
+import GeneratedCanvas from '../components/GeneratedCanvas';
+import Inputs from '../components/Inputs';
+import Util from '../util/util.js'
 const paper = require('paper');
 
 export default {
@@ -217,7 +214,7 @@ export default {
       this.miniParam = !this.miniParam
     },
     save() {
-      let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+      let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
       window.location.href=image;
       this.printModel()
     },
