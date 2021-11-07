@@ -55,6 +55,16 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
+      <v-list-item>
+        <v-list-item-icon v-if="miniParam">
+          <v-btn icon @click.stop="toggleMini">
+            <v-icon>mdi-application-export</v-icon>
+          </v-btn>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <ExportModelDialog v-bind:model="artModel"/>
+        </v-list-item-content>
+      </v-list-item>
       <!-- ROUTING XXX -->
       <!-- <v-list-item>
         <v-list-item-icon v-if="miniParam">
@@ -97,6 +107,7 @@
 
 <script>
 import GeneratedCanvas from '../components/GeneratedCanvas';
+import ExportModelDialog from '../components/ExportModelDialog';
 import Inputs from '../components/Inputs';
 import Util from '../util/util.js'
 const paper = require('paper');
@@ -105,6 +116,7 @@ export default {
   name: 'App',
   components: {
     GeneratedCanvas,
+    ExportModelDialog,
     Inputs,
   },
 
@@ -152,6 +164,7 @@ export default {
     absolute: true,
     miniParam: true,
     canvas: null,
+    exportDialog: false,
     paramSelection: ['bckgLinePosition', 'fillColor'],
     paramNodes: [
             {
@@ -216,10 +229,6 @@ export default {
     save() {
       let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
       window.location.href=image;
-      this.printModel()
-    },
-    printModel() {
-      console.log(this.artModel)
     },
   },
 };
