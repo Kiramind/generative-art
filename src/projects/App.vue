@@ -20,63 +20,6 @@
 
       <v-spacer></v-spacer>
     </v-app-bar>
-    <v-navigation-drawer
-      app permanent right clipped
-      :mini-variant.sync="miniParam">
-      <v-list-item>
-        <v-list-item-icon>
-          <v-btn icon @click.stop="toggleMini">
-            <v-icon>mdi-cog</v-icon>
-          </v-btn>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            Parametres
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            modifier les parametres d'entrée
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider></v-divider>
-      <v-list-item>
-        <v-list-item-icon v-if="miniParam">
-          <v-btn icon @click.stop="toggleMini">
-            <v-icon>mdi-tune</v-icon>
-          </v-btn>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-treeview
-            selection-type="leaf"
-            v-model="paramSelection"
-            selectable
-            :items="paramNodes"
-          ></v-treeview>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider></v-divider>
-      <v-list-item>
-        <v-list-item-icon v-if="miniParam">
-          <v-btn icon @click.stop="toggleMini">
-            <v-icon>mdi-application-export</v-icon>
-          </v-btn>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <ExportModelDialog v-bind:model="artModel"/>
-        </v-list-item-content>
-      </v-list-item>
-      <!-- ROUTING XXX -->
-      <!-- <v-list-item>
-        <v-list-item-icon v-if="miniParam">
-          <v-btn icon @click.stop="toggleMini">
-            <v-icon>mdi-soccer</v-icon>
-          </v-btn>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <router-link to="/foo">/foo</router-link>
-        </v-list-item-content>
-      </v-list-item> -->
-    </v-navigation-drawer>
     <v-main>
       <v-container fluid>
         <v-overlay
@@ -107,7 +50,6 @@
 
 <script>
 import GeneratedCanvas from '../components/GeneratedCanvas';
-import ExportModelDialog from '../components/ExportModelDialog';
 import Inputs from '../components/Inputs';
 import Util from '../util/util.js'
 const paper = require('paper');
@@ -116,7 +58,6 @@ export default {
   name: 'App',
   components: {
     GeneratedCanvas,
-    ExportModelDialog,
     Inputs,
   },
 
