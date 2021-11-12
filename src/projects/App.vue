@@ -38,6 +38,7 @@
           color="orange lighten-2" @click="save">
           Sauvegarder
         </v-btn>
+        <ExportModelDialog v-bind:model="artModel"/>
         <Inputs
           v-bind:artModel="artModel"
           v-bind:seed="seed"
@@ -50,6 +51,7 @@
 
 <script>
 import GeneratedCanvas from '../components/GeneratedCanvas';
+import ExportModelDialog from '../components/ExportModelDialog';
 import Inputs from '../components/Inputs';
 import Util from '../util/util.js'
 const paper = require('paper');
@@ -58,6 +60,7 @@ export default {
   name: 'App',
   components: {
     GeneratedCanvas,
+    ExportModelDialog,
     Inputs,
   },
 

@@ -108,7 +108,6 @@
           pattern.centers[index]
         );
         path.rotate(index*pattern.rotationIncr);
-        console.log(pattern)
         return path
       },
       drawLineBackground(canvas){
