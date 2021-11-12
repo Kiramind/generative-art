@@ -38,7 +38,7 @@
         paper.project.activeLayer.removeChildren();
         this.drawBackground(c)
         this.drawLineBackground(c)
-        this.drawPattern()
+        this.drawAllPatterns()
         paper.view.draw()
       },
       drawBackground(canvas) {
@@ -87,18 +87,29 @@
         }
         return stops
       },
-      drawPattern() {
+      drawAllPatterns() {
         var paths = [];
-        for (var i = 0; i < this.artModel.pattern.number; i++) {
-
-          var path = new PaperUtil.shapedPath(
-            this.artModel.pattern,
-            this.artModel.pattern.centers[i]
-          );
-          path.rotate(i*this.artModel.pattern.rotationIncr);
-          paths.push(path);
+        let pattern1 = this.artModel.pattern
+        let pattern2 = this.artModel.pattern2
+        let maxPatternNumber = Math.max(pattern1.number, pattern2.number)
+        for (var i = 0; i < maxPatternNumber; i++) {
+          if (i < pattern1.number) {
+              paths.push(this.drawOnePatternShape(pattern1, i));
+          }
+          if (i < pattern2.number) {
+              paths.push(this.drawOnePatternShape(pattern2, i));
+          }
         }
         return paths
+      },
+      drawOnePatternShape(pattern, index) {
+        var path = new PaperUtil.shapedPath(
+          pattern,
+          pattern.centers[index]
+        );
+        path.rotate(index*pattern.rotationIncr);
+        console.log(pattern)
+        return path
       },
       drawLineBackground(canvas){
         var paths = [];

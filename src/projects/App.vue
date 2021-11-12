@@ -77,6 +77,20 @@ export default {
         radius2: 10,
         sides: 5,
       },
+      pattern2: {
+        type: "polygone",
+        centers: [],
+        fillColor: "#221155DD",
+        number: 20,
+        strokeWidth: 2,
+        strokeColor: "#991122FF",
+        rotationIncr: 5,
+        width: 40,
+        height: 25,
+        radius1: 30,
+        radius2: 10,
+        sides: 3,
+      },
       backgroundLines: {
         number: 50,
         start: 100,
@@ -145,14 +159,18 @@ export default {
     updateModel() {
       this.canvas = document.getElementById("myCanvas");
       this.rand = Util.randFromSeed(this.seed.value)
+      this.updateCenters(this.artModel.pattern)
+      this.updateCenters(this.artModel.pattern2)
+    },
+    updateCenters(pattern) {
       let newCenters = [];
-      for (var i = 0; i < this.artModel.pattern.number; i++) {
+      for (var i = 0; i < pattern.number; i++) {
         newCenters.push(new paper.Point(
           Util.randomInt(this.rand, this.canvas.clientWidth),
           Util.randomInt(this.rand, this.canvas.clientHeight))
         )
       }
-      this.artModel.pattern.centers = newCenters
+      pattern.centers = newCenters
     },
     redraw() {
       this.updateModel()
@@ -168,8 +186,12 @@ export default {
       this.miniParam = !this.miniParam
     },
     save() {
-      let image = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-      window.location.href=image;
+      let image = new Image()
+      let src = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+      image.src = src
+      var w = window.open("")
+      w.document.write(image.outerHTML)
+      w.document.close()
     },
   },
 };

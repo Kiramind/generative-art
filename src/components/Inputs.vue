@@ -8,7 +8,11 @@
     >
       <v-tab>
       <v-icon left>mdi-lock-pattern</v-icon>
-        Motifs
+        Motifs 1
+      </v-tab>
+      <v-tab>
+      <v-icon left>mdi-puzzle</v-icon>
+        Motifs 2
       </v-tab>
       <v-tab>
         <v-icon left>mdi-format-line-style</v-icon>
@@ -20,160 +24,19 @@
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab" name="InputTabItems">
-      <v-tab-item name="PatternTabItem">
-        <v-tabs v-model="innerTab" vertical>
-          <v-tab>
-            <v-icon left>mdi-palette</v-icon>
-            Couleur
-          </v-tab>
-          <v-tab>
-            <v-icon left>mdi-border-outside</v-icon>
-            Bordure
-          </v-tab>
-          <v-tab>
-            <v-icon left>mdi-shape</v-icon>
-            Formes
-          </v-tab>
-          <v-tab>
-            <v-icon left>mdi-page-next</v-icon>
-            Détails
-          </v-tab>
-          <v-tab-item name="PatternColorTabItem">
-            <v-card outlined>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-color-picker
-                    dot-size="25"
-                    swatches-max-height="200"
-                    hide-inputs
-                    v-model="artModel.pattern.fillColor"
-                  ></v-color-picker>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </v-tab-item>
-          <v-tab-item name="PatternLineTabItem">
-            <v-card outlined>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-color-picker
-                    dot-size="25"
-                    swatches-max-height="200"
-                    hide-inputs
-                    v-model="artModel.pattern.strokeColor"
-                  ></v-color-picker>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </v-tab-item>
-          <v-tab-item name="PatternShapeTabItem">
-            <v-card outlined>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-select
-                    :items="patternTypes"
-                    label="Type"
-                    outlined
-                    v-model="artModel.pattern.type"
-                    dense
-                  ></v-select>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-text-field v-model="seed.value" label="Position"></v-text-field>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </v-tab-item>
-          <v-tab-item name="PatternDetailsTabItem">
-            <v-card outlined min-width="300">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.number"
-                    label="Densité"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="100"
-                    min="10"
-                    dense
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="showWidth()">
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.width"
-                    label="Largeur"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="50"
-                    min="5"
-                    dense
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="showHeight()">
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.height"
-                    label="Longueur"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="50"
-                    min="5"
-                    dense
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="showRadius1()">
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.radius1"
-                    label="Rayon"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="50"
-                    min="5"
-                    dense
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="showRadius2()">
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.radius2"
-                    label="Rayon 2"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="50"
-                    min="5"
-                    dense
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="showSides()">
-                <v-list-item-content>
-                  <v-slider
-                    v-model="artModel.pattern.sides"
-                    label="Pointes"
-                    :thumb-size="16"
-                    thumb-label="always"
-                    height="40"
-                    max="10"
-                    min="3"
-                  ></v-slider>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </v-tab-item>
-        </v-tabs>
+      <v-tab-item name="Pattern1TabItem">
+        <PatternInputTab
+          v-bind:patternModel="artModel.pattern"
+          v-bind:seed="seed"
+          v-on:model-update="redraw()"
+          />
+      </v-tab-item>
+      <v-tab-item name="Pattern2TabItem">
+        <PatternInputTab
+          v-bind:patternModel="artModel.pattern2"
+          v-bind:seed="seed"
+          v-on:model-update="redraw()"
+          />
       </v-tab-item>
       <v-tab-item name="LineTabItem">
         <v-tabs vertical>
@@ -412,20 +275,24 @@
 </template>
 
 <script>
-  // import Util from '../util/util.js'
+  import PatternInputTab from './PatternInputTab';
 
   export default {
     props: ['artModel', 'seed', 'paramSelection'],
     name: 'Inputs',
+    components: {
+      PatternInputTab,
+    },
     data: () => ({
       patternTypes: ['rectangle', 'cercle', 'éllipse', 'polygone', 'étoile'],
       tab: null,
       innerTab: null,
     }),
     updated: function() {
-      this.$emit("model-update");
+      this.$emit("model-update")
     },
     methods: {
+      redraw() {this.$emit("model-update")},
       showFillColor() {return this.paramSelection.includes('fillColor')},
       showBorderColor() {return this.paramSelection.includes('borderColor')},
       showShapeTypes() {return this.paramSelection.includes('shapeTypes')},
