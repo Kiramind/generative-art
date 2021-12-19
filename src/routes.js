@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from './projects/App.vue'
+import Carolinized from './projects/Carolinized.vue'
 
 Vue.use(Router)
 
@@ -13,8 +14,8 @@ export default new Router({
     },
     {
       path: '/generated_art',
-      name: 'App',
-      component: App
+      name: 'Carolinized',
+      component: Carolinized
     },
     // {
     //   path: '/foo',
