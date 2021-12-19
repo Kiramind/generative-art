@@ -22,10 +22,14 @@
     </v-app-bar>
     <v-main>
       <v-container fluid>
-        <Display v-bind:generationModel="generationModel" ref="canvas"/>
+        <Display v-bind:config="generationModel" ref="canvas"/>
         <v-btn
           color="orange lighten-2" @click="draw">
           Draw
+        </v-btn>
+        <v-btn
+          color="orange lighten-2" @click="drawNextStep">
+          Next Step
         </v-btn>
       </v-container>
     </v-main>
@@ -47,13 +51,17 @@ export default {
   data: () => ({
     generationModel: {
       seed: "Caroline", // TODO chose seed from input
-      stepByStep: false, // Enable step by step drawing
+      stepByStep: false, // TODO Enable step by step drawing
+      padding: 0, // TODO use padding
     }
   }),
   mounted: function() {},
   methods: {
     draw() {
       this.$refs.canvas.drawNew()
+    },
+    drawNextStep() {
+      this.$refs.canvas.drawNextStep()
     }
   }
 }
