@@ -2,6 +2,7 @@ import Util from '../../util/util.js'
 import Direction from './direction.js'
 
 const MIN_MOVE_RATIO = 0.1;
+const MAX_MOVE_RATIO = 0.8;
 
 export default class Generator {
 
@@ -40,8 +41,10 @@ export default class Generator {
     return Util.randomInt(this.rand, max)
   }
 
-  nextIntWithMin(isHoriz, max) {
-    let min = Math.round(MIN_MOVE_RATIO * (isHoriz ? this.width : this.height))
+  nextIntBound(isHoriz, max) {
+    let bound = isHoriz ? this.width : this.height
+    let min = Math.round(MIN_MOVE_RATIO * bound)
+    max = Math.min(max, MAX_MOVE_RATIO * bound)
     return min + Util.randomInt(this.rand, max - min)
   }
   nextDir(isHoriz, point){
@@ -84,7 +87,7 @@ export default class Generator {
     console.log("point",point)
     let remainingSpace = this.remainingSpace(dir, point)
     console.log("remainingSpace", remainingSpace)
-    let val = this.nextIntWithMin(Direction.isHoriz(dir),remainingSpace)
+    let val = this.nextIntBound(Direction.isHoriz(dir),remainingSpace)
     console.log("val", val)
     switch (dir) {
       case Direction.UP:
