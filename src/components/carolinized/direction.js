@@ -5,7 +5,7 @@ const Direction = {
   DOWN: Symbol("down"),
 
   isHoriz(dir) {
-    return dir === Direction.UP || dir === Direction.DOWN
+    return dir === Direction.LEFT || dir === Direction.RIGHT
   },
   opp(dir) {
     switch (dir) {

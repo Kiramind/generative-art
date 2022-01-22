@@ -3,12 +3,12 @@
     v-model="exportDialog"
     width="500"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <!-- <template v-slot:activator="{ on, attrs }">
       <v-btn color="gray lighten-2" v-bind="attrs" v-on="on">
         <v-icon left>mdi-application-export</v-icon>
         Debug modèle
       </v-btn>
-    </template>
+    </template> -->
 
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">

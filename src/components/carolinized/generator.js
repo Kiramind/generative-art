@@ -1,8 +1,10 @@
 import Util from '../../util/util.js'
 import Direction from './direction.js'
+import DrawSegment from './DrawSegment.js'
 
-const MIN_MOVE_RATIO = 0.1;
-const MAX_MOVE_RATIO = 0.8;
+const MIN_MOVE_RATIO = 0.1
+const MAX_MOVE_RATIO = 0.8
+const PADDING = 20
 
 export default class Generator {
 
@@ -10,6 +12,8 @@ export default class Generator {
       this.rand = rand
       this.width = width
       this.height = height
+      this.beat = 0
+      this.dirStack = []
   }
 
   setDimension(width, height){
@@ -17,57 +21,71 @@ export default class Generator {
     this.height = height
   }
 
-  nextCurl(startPoint) {
-    let dirHoriz = this.nextDir(true, startPoint)
-    let dirVert = this.nextDir(false, startPoint)
-
-    return this.computeCurlSegment(startPoint, dirHoriz, dirVert)
+  nextDrawSegment(lastPoint) {
+    console.log("generator before", this.beat, this.dirStack)
+    let dir = this._nextDir(lastPoint)
+    let nextPoint = this._movePointToDir(lastPoint, dir)
+    this.dirStack.push(dir)
+    this.beat = (this.beat +1) % 4
+    console.log("generator after", this.beat, dir, this.dirStack)
+    return DrawSegment.of(lastPoint, nextPoint, dir)
   }
 
-  computeCurlSegment(startPoint, dir1, dir2) {
-    let segments = [startPoint]
-    let lastPoint = startPoint
-
-    let dirList = [dir1, dir2, Direction.opp(dir1), Direction.opp(dir2)]
-    dirList.forEach( dir => {
-      console.log(dir)
-      lastPoint = this.movePointToDir(lastPoint, dir);
-      segments.push(lastPoint)
-    })
-    return segments
+  popSegment() {
+    this.beat--
+    if (this.beat < 0 ) {
+      this.beat = 3
+    }
+    this.dirStack.pop()
   }
 
-  nextInt(max) {
+  _nextDir(lastPoint) {
+    switch(this.beat) {
+      case 0:
+        return this._generateDir(true, lastPoint)
+      case 1:
+        return this._generateDir(false, lastPoint)
+      case 2:
+      case 3:
+        return Direction.opp(this.dirStack[this.dirStack.length - 2])
+      default:
+        throw ("Unexpected beat value: " + this.beat)
+    }
+  }
+
+  _nextInt(max) {
     return Util.randomInt(this.rand, max)
   }
 
-  nextIntBound(isHoriz, max) {
+// TODO prevent going out of bound
+  _nextIntBound(isHoriz, max) {
     let bound = isHoriz ? this.width : this.height
-    let min = Math.round(MIN_MOVE_RATIO * bound)
-    max = Math.min(max, MAX_MOVE_RATIO * bound)
+    max = Math.max(0, Math.min(max - PADDING, MAX_MOVE_RATIO * bound))
+    let min = Math.min(max, Math.round(MIN_MOVE_RATIO * bound))
     return min + Util.randomInt(this.rand, max - min)
   }
-  nextDir(isHoriz, point){
+
+  // TODO: take into account padding + min collision distance
+  _generateDir(isHoriz, point){
     let threshold = isHoriz ? point[0] : point[1];
-    let randomInt = this.nextInt(isHoriz ? this.width : this.height)
+    let randomInt = this._nextInt(isHoriz ? this.width : this.height)
     let ret
     if (randomInt < threshold) {
       ret = isHoriz ? Direction.LEFT : Direction.UP;
     } else {
       ret = isHoriz ? Direction.RIGHT : Direction.DOWN;
     }
-    console.log("nextDir: isHoriz, point, randomInt, ret", isHoriz, point, randomInt, ret)
     return ret
   }
 
   randomPoint() {
     return [
-      this.nextInt(this.width),
-      this.nextInt(this.height)
+      this._nextInt(this.width),
+      this._nextInt(this.height)
     ]
   }
 
-  remainingSpace(dir, point) {
+  _remainingSpace(dir, point) {
     switch (dir) {
       case Direction.UP:
         return point[1];
@@ -83,12 +101,12 @@ export default class Generator {
     }
   }
 
-  movePointToDir(point, dir) {
-    console.log("point",point)
-    let remainingSpace = this.remainingSpace(dir, point)
-    console.log("remainingSpace", remainingSpace)
-    let val = this.nextIntBound(Direction.isHoriz(dir),remainingSpace)
-    console.log("val", val)
+  _movePointToDir(point, dir) {
+    // console.log("point",point)
+    let remainingSpace = this._remainingSpace(dir, point)
+    // console.log("remainingSpace", remainingSpace)
+    let val = this._nextIntBound(Direction.isHoriz(dir),remainingSpace)
+    // console.log("val", val)
     switch (dir) {
       case Direction.UP:
           return [point[0], point[1] - val]
