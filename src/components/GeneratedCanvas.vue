@@ -103,7 +103,7 @@
         return paths
       },
       drawOnePatternShape(pattern, index) {
-        var path = new PaperUtil.shapedPath(
+        var path = PaperUtil.shapedPath(
           pattern,
           pattern.centers[index]
         );

@@ -8,10 +8,10 @@
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="Logo Art généré"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="@/assets/logo.svg"
           transition="scale-transition"
           width="40"
         />
@@ -25,11 +25,11 @@
         <Display v-bind:config="generationModel" ref="canvas"/>
         <v-btn
           color="orange lighten-2" @click="draw">
-          Draw
+          Dessiner
         </v-btn>
         <v-btn
           color="orange lighten-2" @click="drawNextStep">
-          Next Step
+          Étape suivante
         </v-btn>
       </v-container>
     </v-main>
