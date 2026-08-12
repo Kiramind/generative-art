@@ -1,8 +1,8 @@
 import Direction from './direction.js'
+import paper from 'paper'
 
 // const MIN_MOVE_RATIO = 0.1;
 // const MAX_MOVE_RATIO = 0.8;
-const paper = require('paper');
 
 export default class DrawSegment {
 

@@ -1,26 +1,19 @@
-<style scoped>
-#myCanvas {
-  border: black solid 1px;
-  width: 100%;
-  /* height: 50%; */
-}
-</style>
 <template>
-  <v-container>
+  <v-container class="canvas-container">
   <canvas
-    id="myCanvas" resize>
+    id="myCanvas"
+>
   </canvas>
   </v-container>
 </template>
-
 <script>
   import Util from '../util/util.js'
   import PaperUtil from '../util/paperUtil.js'
-  const paper = require('paper');
+  import paper from 'paper'
 
   export default {
-    props: ['artModel'],
     name: 'GeneratedCanvas',
+    props: ['artModel'],
     data: () => ({}),
     mounted: function() {
       paper.setup("myCanvas")
@@ -35,6 +28,7 @@
       },
       draw() {
         let c = document.getElementById("myCanvas");
+        paper.view.viewSize = new paper.Size(c.clientWidth, Math.round(c.clientWidth / 2))
         paper.project.activeLayer.removeChildren();
         this.drawBackground(c)
         this.drawLineBackground(c)
@@ -144,3 +138,18 @@
     },
   }
 </script>
+
+<style scoped>
+#myCanvas {
+  border: black solid 1px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+}
+
+.canvas-container {
+  box-sizing: border-box;
+  max-width: 1185px;
+  padding: 12px;
+}
+</style>

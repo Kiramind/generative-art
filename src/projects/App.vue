@@ -1,60 +1,60 @@
 <template>
   <v-app>
     <v-app-bar
-      app
       color="primary"
-      dark
-      clipped-right
     >
-      <div class="d-flex align-center">
-        <v-img
+      <div class="d-flex align-center pl-4">
+        <img
           alt="Logo Art généré"
-          class="shrink mr-2"
-          contain
-          src="@/assets/logo.svg"
-          transition="scale-transition"
-          width="40"
-        />
-        <h2>Art Généré</h2>
+          class="app-logo mr-2"
+          :src="logo"
+        >
+        <h2 class="text-white">Art Généré</h2>
       </div>
 
       <v-spacer></v-spacer>
     </v-app-bar>
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="main-content">
         <v-overlay
-          :absolute="absolute"
-          opacity="0.74"
-          :value="overlay"
+          contained
+          class="align-center justify-center protocol-overlay"
+          :model-value="overlay"
+          :opacity="0.74"
         >
           <v-btn
-            color="orange lighten-2"
-            @click="start">
+            color="orange-lighten-2"
+            @click="start"
+>
             Commencer...
           </v-btn>
         </v-overlay>
-        <GeneratedCanvas v-bind:artModel="artModel" ref="canvas"/>
+        <GeneratedCanvas ref="canvas" :art-model="artModel" />
         <v-btn
-          color="orange lighten-2" @click="save">
+          color="orange-lighten-2" @click="save"
+>
           Sauvegarder
         </v-btn>
-        <ExportModelDialog v-bind:model="artModel"/>
+        <ExportModelDialog :model="artModel" />
         <Inputs
-          v-bind:artModel="artModel"
-          v-bind:seed="seed"
-          v-bind:paramSelection="paramSelection"
-          v-on:model-update="redraw()"/>
+          :art-model="artModel"
+          :seed-value="seed.value"
+          @update:art-model="artModel = $event"
+          @update:seed-value="seed.value = $event"
+          @model-update="redraw"
+        />
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import GeneratedCanvas from '../components/GeneratedCanvas';
-import ExportModelDialog from '../components/ExportModelDialog';
-import Inputs from '../components/Inputs';
+import GeneratedCanvas from '../components/GeneratedCanvas.vue'
+import ExportModelDialog from '../components/ExportModelDialog.vue'
+import Inputs from '../components/Inputs.vue'
 import Util from '../util/util.js'
-const paper = require('paper');
+import paper from 'paper'
+import logo from '../assets/logo.svg'
 
 export default {
   name: 'App',
@@ -65,6 +65,7 @@ export default {
   },
 
   data: () => ({
+    logo,
     artModel: {
         pattern:{
            type:"étoile",
@@ -122,44 +123,17 @@ export default {
     seed:{ value: "Artiste"},
     rand: Util.randFromSeed("Artiste"),
     overlay: true,
-    absolute: true,
     miniParam: true,
     canvas: null,
     exportDialog: false,
-    paramSelection: ['bckgLinePosition', 'fillColor'],
-    paramNodes: [
-            {
-              id: 'pattern',
-              name: 'Motifs',
-              children: [
-                { id: 'fillColor', name: 'remplissage'},
-                { id: 'borderColor', name: 'bordure' },
-                { id: 'shapeTypes', name: 'formes' },
-                { id: 'shapeDetails', name: 'details' },
-              ],
-            },
-            {
-              id: 'lines',
-              name: 'Lignes',
-              children: [
-                { id: 'bckgLinePosition', name: 'position'},
-                { id: 'bckgLineDetails', name: 'détails' },
-                { id: 'bckgLineColor', name: 'couleur' },
-              ],
-            },
-            {
-              id: 'background',
-              name: 'Fond',
-              children: [
-                { id: 'bckgDetails', name: 'détails' },
-                { id: 'bckgColor', name: 'couleur' },
-              ],
-            },
-          ],
   }),
   mounted: function() {
-    window.addEventListener('resize', () => this.redraw())
-    this.updateModel()
+    this.resizeHandler = () => this.redraw()
+    window.addEventListener('resize', this.resizeHandler)
+    this.$nextTick(this.redraw)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.resizeHandler)
   },
   methods: {
     updateModel() {
@@ -202,3 +176,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.main-content {
+  position: relative;
+  padding: 12px;
+}
+
+.protocol-overlay {
+  z-index: 10;
+}
+
+.app-logo {
+  width: 40px;
+  height: 48px;
+  object-fit: contain;
+}
+</style>

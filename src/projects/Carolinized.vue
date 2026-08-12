@@ -1,34 +1,30 @@
 <template>
   <v-app>
     <v-app-bar
-      app
       color="primary"
-      dark
-      clipped-right
     >
-      <div class="d-flex align-center">
-        <v-img
+      <div class="d-flex align-center pl-4">
+        <img
           alt="Logo Art généré"
-          class="shrink mr-2"
-          contain
-          src="@/assets/logo.svg"
-          transition="scale-transition"
-          width="40"
-        />
-        <h2>Carolinized</h2>
+          class="app-logo mr-2"
+          :src="logo"
+        >
+        <h2 class="text-white">Carolinized</h2>
       </div>
 
       <v-spacer></v-spacer>
     </v-app-bar>
     <v-main>
       <v-container fluid>
-        <Display v-bind:config="generationModel" ref="canvas"/>
+        <Display ref="canvas" :config="generationModel" />
         <v-btn
-          color="orange lighten-2" @click="draw">
+          color="orange-lighten-2" @click="draw"
+>
           Dessiner
         </v-btn>
         <v-btn
-          color="orange lighten-2" @click="drawNextStep">
+          color="orange-lighten-2" @click="drawNextStep"
+>
           Étape suivante
         </v-btn>
       </v-container>
@@ -37,7 +33,8 @@
 </template>
 
 <script>
-import Display from '../components/carolinized/Display'
+import Display from '../components/carolinized/Display.vue'
+import logo from '../assets/logo.svg'
 // const paper = require('paper');
 
 export default {
@@ -49,6 +46,7 @@ export default {
   },
 
   data: () => ({
+    logo,
     generationModel: {
       seed: "Caroline", // TODO chose seed from input
       stepByStep: false, // TODO Enable step by step drawing
@@ -66,3 +64,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.app-logo {
+  width: 40px;
+  height: 48px;
+  object-fit: contain;
+}
+</style>

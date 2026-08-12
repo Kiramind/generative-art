@@ -1,4 +1,4 @@
-const paper = require('paper');
+import paper from 'paper'
 
 const PaperUtil = {
   shapedPath(pattern, center) {

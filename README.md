@@ -7,74 +7,134 @@ formes, couleurs, densité, lignes, fond et graine de génération.
 Le site public est disponible sur
 [kiramind.github.io/generative-art](https://kiramind.github.io/generative-art/).
 
+## Technologies
+
+- Vue 3 et Vue Router
+- Vuetify 4
+- Paper.js pour le dessin
+- Vite pour le développement et le build
+- Vitest et Playwright pour les tests
+
 ## Prérequis
 
-- Node.js 22 (voir `.nvmrc`)
-- Yarn 1.x
+- Node.js 22.18.0, indiqué dans `.nvmrc`
+- npm, fourni avec Node.js
+- Google Chrome pour les tests visuels locaux
 
-Le projet utilise Yarn comme seul gestionnaire de dépendances. Ne pas ajouter
-de `package-lock.json`.
+Avec `nvm` :
+
+```bash
+nvm install
+nvm use
+```
 
 ## Installation
 
+Le projet utilise npm et `package-lock.json`. Depuis la racine du dépôt :
+
 ```bash
-yarn install --frozen-lockfile
+npm ci
 ```
 
-Dans un environnement professionnel configuré avec un registre privé, utiliser
-explicitement le registre public npm pour ce projet personnel :
+Dans un environnement configuré avec un registre npm privé, forcer le registre
+public pour ce projet personnel :
 
 ```bash
 env -u NPM_CONFIG_REGISTRY -u YARN_REGISTRY \
-  yarn install --frozen-lockfile --registry https://registry.npmjs.org
+  npm_config_registry=https://registry.npmjs.org npm ci
 ```
 
-## Développement
+Ne pas créer de `yarn.lock` et ne pas utiliser un registre d'entreprise.
 
-Lancer le serveur local :
+## Développement local
 
 ```bash
-yarn serve
+npm run dev
 ```
 
-Vérifier le code et construire la version de production :
+Ouvrir l'adresse affichée par Vite, normalement
+<http://localhost:5173/generative-art/>.
+
+Pour vérifier le build de production localement :
 
 ```bash
-yarn lint
-yarn build
+npm run build
+npm run preview
 ```
 
-Le build est généré dans `dist/`. GitHub Actions exécute automatiquement le
-lint et le build à chaque pull request et chaque push sur `master`.
+Le résultat est créé dans `dist/` et servi normalement sur
+<http://localhost:4173/generative-art/>.
 
-## Déploiement
+## Tests et validation
 
-Le site GitHub Pages est actuellement publié depuis la branche `gh-pages`.
-Après avoir validé visuellement le build local :
+Les commandes disponibles sont :
 
 ```bash
-yarn deploy
+npm run lint       # règles JavaScript et Vue
+npm run test       # tests unitaires du générateur déterministe
+npm run build      # build de production Vite
+npm run test:e2e   # interactions et régression visuelle Playwright
+npm run validate   # ensemble des vérifications ci-dessus
 ```
 
-Cette commande reconstruit le site puis remplace le contenu de `gh-pages`.
-Comme le site est utilisé en classe, ne pas déployer directement une mise à
-jour de dépendances sans avoir vérifié au minimum :
+Les tests Playwright utilisent trois tailles représentatives :
 
-1. La page principale à la taille d'un écran d'ordinateur.
-2. Le bouton **Commencer…** et l'affichage des motifs.
-3. Les onglets Motifs, Lignes et Fond.
-4. La modification d'au moins une forme, une couleur et la graine Position.
-5. Le bouton **Sauvegarder**.
-6. Un second écran étroit ou mobile.
+- grand écran : 1440 × 1000 ;
+- petit écran : 1024 × 768 ;
+- mobile : 390 × 844.
 
-## Maintenance
+Deux états (initial et éditeur après interaction) sont capturés pour chaque
+taille, soit six images de référence versionnées dans
+`tests/e2e/art.spec.js-snapshots/`. Pour les mettre à jour après une modification
+visuelle intentionnelle :
 
-Le projet reste volontairement sur Vue 2 et Vuetify 2 afin de préserver
-l'application pédagogique existante. Ces versions sont en fin de vie. Une
-migration vers Vue 3/Vuetify 3 doit donc être traitée comme un projet séparé,
-avec tests d'interaction et validation visuelle, et non comme une simple mise à
-jour de dépendances.
+```bash
+npm run build
+npm run test:e2e:update
+```
 
-Dependabot propose chaque mois des mises à jour mineures et correctives. Les
-mises à jour majeures de Vue, Vue Router, Vuetify et Vue CLI sont ignorées pour
-éviter une migration accidentelle.
+Toujours examiner les trois images modifiées avant de les valider. Ne jamais
+mettre à jour les références uniquement pour faire passer un test.
+
+La validation manuelle doit aussi couvrir :
+
+1. le bouton **Commencer...** et les motifs initiaux ;
+2. les onglets Motifs 1, Motifs 2, Lignes et Fond ;
+3. une modification de forme, de couleur et de graine Position ;
+4. le bouton **Sauvegarder** ;
+5. la route expérimentale `#/generated_art` ;
+6. un écran d'ordinateur et un écran mobile.
+
+## Intégration continue
+
+`.github/workflows/ci.yml` exécute l'installation reproductible, le lint, les
+tests unitaires, le build et les tests de navigateur à chaque pull request et
+push sur `master`.
+
+Les captures visuelles sont comparées localement avec Google Chrome. En CI,
+Playwright contrôle les interactions, les dimensions et le contenu effectif du
+canvas ; cette séparation évite les faux écarts de rendu entre macOS et Linux.
+
+## Déploiement GitHub Pages
+
+Le déploiement n'est jamais automatique. Après fusion sur `master` et
+validation du site :
+
+1. Dans **Settings → Pages**, choisir **GitHub Actions** comme source une seule
+   fois lors du passage depuis l'ancienne branche `gh-pages`.
+2. Ouvrir **Actions → Deploy GitHub Pages**.
+3. Choisir **Run workflow** sur `master`.
+4. Attendre la réussite du workflow puis vérifier le site public.
+
+Le workflow reconstruit et reteste l'application avant publication. L'ancien
+script local qui forçait la branche `gh-pages` a été supprimé afin que chaque
+déploiement soit traçable et reproductible.
+
+## Principes de maintenance
+
+- La graine `Artiste` doit continuer à produire le même protocole.
+- Paper.js doit être synchronisé avec la taille CSS du canvas avant le dessin.
+- Une modification des formes, positions, couleurs par défaut ou dimensions du
+  canvas est une modification produit et nécessite une validation visuelle.
+- Les composants d'édition émettent explicitement les nouveaux modèles ; ils ne
+  modifient pas directement les propriétés reçues de leur parent.

@@ -11,7 +11,7 @@
     </template> -->
 
     <v-card>
-      <v-card-title class="text-h5 grey lighten-2">
+      <v-card-title class="text-h5 bg-grey-lighten-2">
         Valeurs courantes
       </v-card-title>
 
@@ -25,15 +25,15 @@
         <v-spacer></v-spacer>
         <v-btn
           color="primary"
-          text
+          variant="text"
           @click="copyExportData"
         >
-        <v-icon left>mdi-content-copy</v-icon>
+        <v-icon start>$contentCopy</v-icon>
           Copier
         </v-btn>
         <v-btn
           color="primary"
-          text
+          variant="text"
           @click="exportDialog = false"
         >
           Fermer
@@ -47,8 +47,8 @@
   // import Util from '../util/util.js'
 
   export default {
-    props: ['model'],
     name: 'ExportModelDialog',
+    props: ['model'],
     data: () => ({
       exportDialog: false,
     }),

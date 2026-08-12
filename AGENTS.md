@@ -3,64 +3,88 @@
 ## Product context
 
 This is a public, actively used educational website for a French audience. An
-art teacher uses it to teach generative art, protocols, and how following the
-same protocol and seed can reproduce an artwork.
+art teacher uses it to teach generative art, protocols, and how the same
+protocol and seed reproduce an artwork.
 
-Preserve French user-facing text and the deterministic generation behavior.
-Treat visual changes, random-number changes, canvas sizing changes, and default
-model changes as product changes rather than routine maintenance.
+Keep user-facing text in French. Preserve deterministic generation, defaults,
+canvas sizing, and the classroom workflow. Treat changes to any of those as
+product changes requiring explicit visual review.
 
-## Technology and deployment
+## Stack and package management
 
-- Vue 2, Vue Router 3, Vuetify 2, Paper.js, and Vue CLI 5.
-- Node version is recorded in `.nvmrc`.
-- Yarn 1 and `yarn.lock` are authoritative. Do not add `package-lock.json`.
-- Production public path is `/generative-art/`.
-- GitHub Pages serves the root of the `gh-pages` branch.
-- `.github/workflows/ci.yml` validates lint and production build but does not
-  deploy.
-- `yarn deploy` force-updates `gh-pages`; run it only with explicit user
-  approval after visual validation.
+- Vue 3, Vue Router 5, Vuetify 4, Paper.js, and Vite 8.
+- Vitest protects deterministic logic; Playwright protects browser behavior.
+- Use the Node version in `.nvmrc`.
+- npm and `package-lock.json` are authoritative. Do not add `yarn.lock`.
+- The production base path is `/generative-art/`.
 
-This is a personal repository. Use the public npm registry, not an employer's
-package registry. In an inherited environment with registry variables, use:
+This is a personal repository. Never use or record an employer package
+registry. In an inherited environment, install with:
 
 ```bash
 env -u NPM_CONFIG_REGISTRY -u YARN_REGISTRY \
-  yarn install --frozen-lockfile --registry https://registry.npmjs.org
+  npm_config_registry=https://registry.npmjs.org npm ci
 ```
 
-## Required checks
+## Architecture invariants
 
-For source or dependency changes:
+- `src/util/util.js` contains the seeded pseudo-random generator. Its reference
+  sequence for `Artiste` is a compatibility contract.
+- Paper.js is a singleton drawing context. Set `paper.view.viewSize` from the
+  canvas client dimensions before drawing, particularly on mobile.
+- `src/projects/App.vue` owns the artwork model and seed.
+- Editor components work on local drafts and emit `update:*` events. Do not
+  reintroduce nested prop mutation or redraw loops through component lifecycle
+  hooks.
+- `PaperUtil.shapedPath(...)` is a factory call; do not prefix it with `new`.
+- The secondary `#/generated_art` route is experimental but must remain usable.
+
+## Required validation
+
+For every source, dependency, build, or layout change run:
 
 ```bash
-yarn lint
-yarn build
+npm run lint
+npm run test
+npm run build
+npm run test:e2e
 git diff --check
 ```
 
-Because this application draws on a canvas, successful compilation is not
-enough. Serve the production output under `/generative-art/` and compare it to
-the live site. Verify that the initial image contains its deterministic stars,
-rectangles, gradient, and dashed lines. Then check the **Commencer…** overlay,
-the editing tabs, seed input, and save action.
+`npm run validate` runs the four npm checks. Playwright serves the production
+build at `/generative-art/` and tests 1440×1000, 1024×768, and 390×844.
 
-Do not accept a dependency update if motifs disappear or deterministic output
-changes unexpectedly. A prior compiler upgrade exposed the invalid expression
-`new PaperUtil.shapedPath(...)`; the correct helper call is
-`PaperUtil.shapedPath(...)`.
+Visual baselines live in `tests/e2e/art.spec.js-snapshots/`. Update them only
+for an intentional visual change:
 
-## Security and maintenance boundaries
+```bash
+npm run build
+npm run test:e2e:update
+```
 
-- Never deploy from an unclean or unreviewed working tree.
-- Never commit credentials, private registry URLs, generated `dist/` content,
-  or browser profiles/screenshots.
-- Vue 2 and Vuetify 2 are end-of-life. Do not perform a Vue 3/Vuetify 3 migration
-  as routine dependency maintenance.
-- The app does not use `VDatePicker`, user-controlled Vuetify presets, SSR, or
-  user-controlled Vue template compilation. Reassess dependency advisories if
-  any of those facts change.
-- Preserve the legacy shared mutable art-model behavior unless a separately
-  tested refactor is explicitly requested. ESLint rules documenting that
-  choice are in `package.json`.
+Inspect every changed PNG. Confirm that stars, rectangles, dashed lines, and
+the gradient remain present; the start overlay is centered; controls remain
+usable; and the mobile canvas contains the full motif set. A successful build
+alone is not acceptance.
+
+## CI and deployment
+
+- `.github/workflows/ci.yml` validates pull requests and `master`.
+- `.github/workflows/deploy-pages.yml` is manual (`workflow_dispatch`) and
+  deploys the tested `dist/` artifact through GitHub Pages Actions.
+- The GitHub Pages source must be set to **GitHub Actions**, not `gh-pages`, when
+  the migration is accepted.
+- Never push, merge, change the Pages source, or deploy without explicit user
+  approval after the user has had an opportunity to validate locally.
+- Never commit `dist/`, Playwright reports/traces, browser profiles, secrets, or
+  private registry information.
+
+## Review boundaries
+
+- Keep French labels and accessible names stable unless copy changes are part
+  of the request.
+- Avoid unrelated visual redesign during dependency maintenance.
+- Do not accept regenerated screenshots without explaining the intended visual
+  change.
+- Keep deployment reversible and verify the public site after any approved
+  deployment.

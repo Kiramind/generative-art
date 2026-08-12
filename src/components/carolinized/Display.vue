@@ -1,28 +1,21 @@
-<style scoped>
-#myCanvas {
-  border: black solid 1px;
-  width: 100%;
-  /* height: 50%; */
-}
-</style>
 <template>
   <v-container>
   <canvas
-    id="myCanvas" resize>
+    id="myCanvas"
+>
   </canvas>
   </v-container>
 </template>
-
 <script>
   import Util from '../../util/util.js'
   import Generator from './generator.js'
   import Collision from './collision.js'
   // import PaperUtil from '../../util/paperUtil.js'
-  const paper = require('paper');
+  import paper from 'paper'
 
   export default {
-    props: ['config'],
     name: 'Display',
+    props: ['config'],
     data: () => ({
       rand: null,
       canvas: null,
@@ -35,6 +28,7 @@
     mounted: function() {
       paper.setup("myCanvas")
       this.canvas = document.getElementById("myCanvas")
+      paper.view.viewSize = new paper.Size(this.canvas.clientWidth, Math.round(this.canvas.clientWidth / 2))
       this.rand = Util.randFromSeed(this.config.seed)
       this.generator = new Generator(this.rand, this.canvas.clientWidth, this.canvas.clientHeight)
       this.collision = new Collision(paper)
@@ -109,3 +103,12 @@
     }
   }
 </script>
+
+<style scoped>
+#myCanvas {
+  border: black solid 1px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+}
+</style>
