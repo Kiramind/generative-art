@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 
 const canvasSignature = (page) => page.locator('#myCanvas').evaluate((canvas) => canvas.toDataURL())
 
@@ -36,11 +37,13 @@ test('supports the main editing workflow', async ({ page }) => {
   await page.getByRole('button', { name: 'Commencer...' }).click()
   await expect(page.getByRole('button', { name: 'Commencer...' })).toBeHidden()
 
-  const popupPromise = page.waitForEvent('popup')
+  const downloadPromise = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Sauvegarder' }).click()
-  const savedArtwork = await popupPromise
-  await expect(savedArtwork.locator('img')).toBeVisible()
-  await savedArtwork.close()
+  const savedArtwork = await downloadPromise
+  expect(savedArtwork.suggestedFilename()).toBe('art-genere.png')
+  const savedPng = await readFile(await savedArtwork.path())
+  expect(Array.from(savedPng.subarray(0, 8))).toEqual([137, 80, 78, 71, 13, 10, 26, 10])
+  expect(savedPng.byteLength).toBeGreaterThan(10_000)
 
   const protocolPanel = page.getByTestId('protocol-panel')
   const appHeader = page.getByTestId('app-header')

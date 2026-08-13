@@ -188,12 +188,12 @@ export default {
       this.miniParam = !this.miniParam
     },
     save() {
-      let image = new Image()
-      let src = this.canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-      image.src = src
-      var w = window.open("")
-      w.document.write(image.outerHTML)
-      w.document.close()
+      const download = document.createElement('a')
+      download.href = this.canvas.toDataURL('image/png')
+      download.download = 'art-genere.png'
+      document.body.appendChild(download)
+      download.click()
+      download.remove()
     },
   },
 };

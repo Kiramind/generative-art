@@ -101,7 +101,7 @@ La validation manuelle doit aussi couvrir :
 1. le bouton **Commencer...** et les motifs initiaux ;
 2. les onglets Motifs 1, Motifs 2, Lignes et Fond ;
 3. une modification de forme, de couleur et de graine Position ;
-4. le bouton **Sauvegarder** ;
+4. le téléchargement PNG `art-genere.png` avec le bouton **Sauvegarder** ;
 5. la route expérimentale `#/generated_art` ;
 6. un écran d'ordinateur et un écran mobile.
 
