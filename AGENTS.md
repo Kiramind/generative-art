@@ -36,6 +36,15 @@ env -u NPM_CONFIG_REGISTRY -u YARN_REGISTRY \
 - Editor components work on local drafts and emit `update:*` events. Do not
   reintroduce nested prop mutation or redraw loops through component lifecycle
   hooks.
+- Schedule a redraw only after Vue has committed emitted model updates. Every
+  list, text field, color picker, and slider must affect the next canvas frame,
+  without a one-interaction delay.
+- Motif layers use stable, independent segments of the seeded random sequence.
+  Changing one motif's density must not move or rotate the other motif. The
+  second segment deliberately skips the ten default Motif 1 points to preserve
+  the historical `Artiste` artwork.
+- Shape point counts and the other discrete geometry controls are integers;
+  normalize point counts defensively before passing them to Paper.js.
 - `PaperUtil.shapedPath(...)` is a factory call; do not prefix it with `new`.
 - The secondary `#/generated_art` route is experimental but must remain usable.
 

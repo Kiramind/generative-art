@@ -22,4 +22,25 @@ describe('seeded generation', () => {
   it('changes the sequence when the protocol seed changes', () => {
     expect(Util.randFromSeed('Artiste')()).not.toBe(Util.randFromSeed('Élève')())
   })
+
+  it('keeps the second motif positions independent from the first motif density', () => {
+    const secondMotif = Util.randomPointCoordinates('Artiste', 20, 1000, 500, 10)
+
+    Util.randomPointCoordinates('Artiste', 10, 1000, 500)
+    expect(Util.randomPointCoordinates('Artiste', 20, 1000, 500, 10)).toEqual(secondMotif)
+
+    Util.randomPointCoordinates('Artiste', 75, 1000, 500)
+    expect(Util.randomPointCoordinates('Artiste', 20, 1000, 500, 10)).toEqual(secondMotif)
+  })
+
+  it('preserves the original default transition between motif layers', () => {
+    const originalSequence = Util.randFromSeed('Artiste')
+    Array.from({ length: 20 }, () => originalSequence())
+    const originalSecondMotif = Array.from({ length: 3 }, () => [
+      Util.randomInt(originalSequence, 1000),
+      Util.randomInt(originalSequence, 500),
+    ])
+
+    expect(Util.randomPointCoordinates('Artiste', 3, 1000, 500, 10)).toEqual(originalSecondMotif)
+  })
 })

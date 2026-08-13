@@ -50,12 +50,12 @@
 
       <v-window-item value="details">
         <v-card variant="outlined" class="pa-5 slider-panel" min-width="300">
-          <v-slider v-model="draftPattern.number" label="Densité" :thumb-size="16" thumb-label="always" :max="100" :min="10" @update:model-value="redraw"></v-slider>
-          <v-slider v-if="showWidth()" v-model="draftPattern.width" label="Largeur" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
-          <v-slider v-if="showHeight()" v-model="draftPattern.height" label="Longueur" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
-          <v-slider v-if="showRadius1()" v-model="draftPattern.radius1" label="Rayon" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
-          <v-slider v-if="showRadius2()" v-model="draftPattern.radius2" label="Rayon 2" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
-          <v-slider v-if="showSides()" v-model="draftPattern.sides" label="Pointes" :thumb-size="16" thumb-label="always" :max="10" :min="3" @update:model-value="redraw"></v-slider>
+          <v-slider v-model="draftPattern.number" label="Densité" :step="1" :thumb-size="16" thumb-label="always" :max="100" :min="10" @update:model-value="redraw"></v-slider>
+          <v-slider v-if="showWidth()" v-model="draftPattern.width" label="Largeur" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
+          <v-slider v-if="showHeight()" v-model="draftPattern.height" label="Longueur" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
+          <v-slider v-if="showRadius1()" v-model="draftPattern.radius1" label="Rayon" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
+          <v-slider v-if="showRadius2()" v-model="draftPattern.radius2" label="Rayon 2" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="5" @update:model-value="redraw"></v-slider>
+          <v-slider v-if="showSides()" v-model="draftPattern.sides" label="Pointes" :step="1" :thumb-size="16" thumb-label="always" :max="10" :min="3" @update:model-value="redraw"></v-slider>
         </v-card>
       </v-window-item>
     </v-window>

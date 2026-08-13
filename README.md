@@ -133,6 +133,10 @@ déploiement soit traçable et reproductible.
 ## Principes de maintenance
 
 - La graine `Artiste` doit continuer à produire le même protocole.
+- Chaque contrôle doit actualiser le dessin dès sa première modification.
+- La densité d'un motif ne doit pas déplacer ou faire pivoter l'autre motif.
+- Les contrôles discrets, comme le nombre de pointes d'une étoile, utilisent
+  uniquement des nombres entiers.
 - Paper.js doit être synchronisé avec la taille CSS du canvas avant le dessin.
 - Une modification des formes, positions, couleurs par défaut ou dimensions du
   canvas est une modification produit et nécessite une validation visuelle.

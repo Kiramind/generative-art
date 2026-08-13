@@ -37,6 +37,19 @@ const Util = {
     return Math.floor(rand()* size);
   },
 
+  randomPointCoordinates(seed, number, width, height, skippedPoints = 0) {
+    const rand = this.randFromSeed(seed)
+    const pointCount = Math.max(0, Math.round(Number(number)))
+    const skippedValues = Math.max(0, Math.round(Number(skippedPoints))) * 2
+
+    for (let index = 0; index < skippedValues; index += 1) rand()
+
+    return Array.from({ length: pointCount }, () => [
+      this.randomInt(rand, width),
+      this.randomInt(rand, height),
+    ])
+  },
+
   sinDeg(angleDeg){
     return Math.sin(toRadians(angleDeg));
   },

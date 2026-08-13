@@ -2,6 +2,7 @@ import paper from 'paper'
 
 const PaperUtil = {
   shapedPath(pattern, center) {
+    const sides = Math.max(3, Math.round(Number(pattern.sides)))
     var path;
     switch (pattern.type) {
       case "circle": // size1: radius
@@ -26,7 +27,7 @@ const PaperUtil = {
       case 3:
         path = paper.Path.RegularPolygon({
             center: center,
-            sides: pattern.sides,
+            sides,
             radius: pattern.radius1,
         });
         break;
@@ -36,7 +37,7 @@ const PaperUtil = {
       default:
         path = paper.Path.Star({
           center: center,
-          points: pattern.sides,
+          points: sides,
           radius1: pattern.radius1,
           radius2: pattern.radius2,
       });

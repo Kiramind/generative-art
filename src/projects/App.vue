@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-app-bar
-      color="primary"
+      data-testid="app-header"
+      :color="headerColor"
+      class="app-header"
     >
       <div class="d-flex align-center pl-4">
         <img
@@ -41,7 +43,8 @@
           :seed-value="seed.value"
           @update:art-model="artModel = $event"
           @update:seed-value="seed.value = $event"
-          @model-update="redraw"
+          @model-update="scheduleRedraw"
+          @section-change="activeSection = $event"
         />
       </v-container>
     </v-main>
@@ -121,12 +124,23 @@ export default {
         }
       },
     seed:{ value: "Artiste"},
-    rand: Util.randFromSeed("Artiste"),
+    activeSection: 'pattern1',
+    redrawScheduled: false,
     overlay: true,
     miniParam: true,
     canvas: null,
     exportDialog: false,
   }),
+  computed: {
+    headerColor() {
+      return {
+        pattern1: '#9f5630',
+        pattern2: '#70518d',
+        lines: '#347462',
+        background: '#476b91',
+      }[this.activeSection]
+    },
+  },
   mounted: function() {
     this.resizeHandler = () => this.redraw()
     window.addEventListener('resize', this.resizeHandler)
@@ -138,19 +152,27 @@ export default {
   methods: {
     updateModel() {
       this.canvas = document.getElementById("myCanvas");
-      this.rand = Util.randFromSeed(this.seed.value)
       this.updateCenters(this.artModel.pattern)
-      this.updateCenters(this.artModel.pattern2)
+      // Motif 2 starts after the ten default Motif 1 points. This preserves the
+      // original default artwork while keeping both layers independent.
+      this.updateCenters(this.artModel.pattern2, 10)
     },
-    updateCenters(pattern) {
-      let newCenters = [];
-      for (var i = 0; i < pattern.number; i++) {
-        newCenters.push(new paper.Point(
-          Util.randomInt(this.rand, this.canvas.clientWidth),
-          Util.randomInt(this.rand, this.canvas.clientHeight))
-        )
-      }
-      pattern.centers = newCenters
+    updateCenters(pattern, skippedPoints = 0) {
+      pattern.centers = Util.randomPointCoordinates(
+        this.seed.value,
+        pattern.number,
+        this.canvas.clientWidth,
+        this.canvas.clientHeight,
+        skippedPoints,
+      ).map(([x, y]) => new paper.Point(x, y))
+    },
+    scheduleRedraw() {
+      if (this.redrawScheduled) return
+      this.redrawScheduled = true
+      this.$nextTick(() => {
+        this.redrawScheduled = false
+        this.redraw()
+      })
     },
     redraw() {
       this.updateModel()
@@ -191,5 +213,9 @@ export default {
   width: 40px;
   height: 48px;
   object-fit: contain;
+}
+
+.app-header {
+  transition: background-color 180ms ease;
 }
 </style>

@@ -33,16 +33,16 @@
             </v-window-item>
             <v-window-item value="position">
               <v-card variant="outlined" class="pa-5 slider-panel">
-                <v-slider v-model="draftArt.backgroundLines.angle" label="Angle" :thumb-size="16" thumb-label="always" :max="359" :min="0" @update:model-value="redraw"></v-slider>
-                <v-slider v-model="draftArt.backgroundLines.start" label="Départ" :thumb-size="16" thumb-label="always" :max="250" :min="-250" @update:model-value="redraw"></v-slider>
+                <v-slider v-model="draftArt.backgroundLines.angle" label="Angle" :step="1" :thumb-size="16" thumb-label="always" :max="359" :min="0" @update:model-value="redraw"></v-slider>
+                <v-slider v-model="draftArt.backgroundLines.start" label="Départ" :step="1" :thumb-size="16" thumb-label="always" :max="250" :min="-250" @update:model-value="redraw"></v-slider>
                 <v-slider v-model="draftArt.backgroundLines.spread" label="Écart" :step="0.1" :thumb-size="16" thumb-label="always" :max="5" :min="1" @update:model-value="redraw"></v-slider>
               </v-card>
             </v-window-item>
             <v-window-item value="details">
               <v-card variant="outlined" class="pa-5 slider-panel" min-width="300">
-                <v-slider v-model="draftArt.backgroundLines.strokeWidth" label="Épaisseur" :thumb-size="16" thumb-label="always" :max="50" :min="0" @update:model-value="redraw"></v-slider>
-                <v-slider v-model="draftArt.backgroundLines.dashGap" label="Espace pointillé" :thumb-size="16" thumb-label="always" :max="100" :min="0" @update:model-value="redraw"></v-slider>
-                <v-slider v-model="draftArt.backgroundLines.dashLength" label="Longueur pointillé" :thumb-size="16" thumb-label="always" :max="50" :min="1" @update:model-value="redraw"></v-slider>
+                <v-slider v-model="draftArt.backgroundLines.strokeWidth" label="Épaisseur" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="0" @update:model-value="redraw"></v-slider>
+                <v-slider v-model="draftArt.backgroundLines.dashGap" label="Espace pointillé" :step="1" :thumb-size="16" thumb-label="always" :max="100" :min="0" @update:model-value="redraw"></v-slider>
+                <v-slider v-model="draftArt.backgroundLines.dashLength" label="Longueur pointillé" :step="1" :thumb-size="16" thumb-label="always" :max="50" :min="1" @update:model-value="redraw"></v-slider>
               </v-card>
             </v-window-item>
           </v-window>
@@ -61,9 +61,23 @@
             <v-window-item value="details">
               <v-card variant="outlined" class="pa-5" min-width="300">
                 <v-switch v-model="draftArt.background.radial" label="Radial" @update:model-value="redraw"></v-switch>
-                <v-slider v-if="!draftArt.background.radial" v-model="draftArt.background.angle" label="Angle" :thumb-size="16" thumb-label="always" :max="359" :min="0" @update:model-value="redraw"></v-slider>
-                <v-slider v-model="draftArt.background.nbColor" label="Nombre de couleurs" :thumb-size="16" :ticks="[1, 2, 3]" show-ticks="always" :max="3" :min="1" @update:model-value="redraw"></v-slider>
-                <v-range-slider v-model="draftArt.background.colorStops" label="Position couleur" :thumb-size="16" :step="0.05" :max="1" :min="0" @update:model-value="redraw"></v-range-slider>
+                <v-slider v-if="!draftArt.background.radial" v-model="draftArt.background.angle" label="Angle" :step="1" :thumb-size="16" thumb-label="always" :max="359" :min="0" @update:model-value="redraw"></v-slider>
+                <div class="color-count-control">
+                  <span id="color-count-label">Nombre de couleurs</span>
+                  <v-btn-toggle
+                    v-model="draftArt.background.nbColor"
+                    aria-labelledby="color-count-label"
+                    color="primary"
+                    data-testid="color-count"
+                    density="compact"
+                    divided
+                    mandatory
+                    @update:model-value="redraw"
+                  >
+                    <v-btn v-for="number in 3" :key="number" :value="number">{{ number }}</v-btn>
+                  </v-btn-toggle>
+                </div>
+                <v-range-slider v-model="draftArt.background.colorStops" label="Position couleur" :thumb-size="16" thumb-label="always" :step="0.05" :max="1" :min="0" @update:model-value="redraw"></v-range-slider>
               </v-card>
             </v-window-item>
             <v-window-item v-for="number in visibleBackgroundColors" :key="number" :value="`color${number}`">
@@ -85,7 +99,7 @@ export default {
   name: 'Inputs',
   components: { PatternInputTab },
   props: ['artModel', 'seedValue'],
-  emits: ['model-update', 'update:art-model', 'update:seed-value'],
+  emits: ['model-update', 'section-change', 'update:art-model', 'update:seed-value'],
   data() {
     return {
       tab: 'pattern1',
@@ -98,6 +112,14 @@ export default {
   computed: {
     visibleBackgroundColors() {
       return Array.from({ length: this.draftArt.background.nbColor }, (_, index) => index + 1)
+    },
+  },
+  watch: {
+    tab: {
+      immediate: true,
+      handler(section) {
+        this.$emit('section-change', section)
+      },
     },
   },
   methods: {
@@ -204,6 +226,14 @@ export default {
 
 .slider-panel {
   padding-top: 44px !important;
+}
+
+.color-count-control {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0 24px;
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
 }
 
 @media (max-width: 600px) {
