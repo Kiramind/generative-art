@@ -143,7 +143,11 @@
 #myCanvas {
   border: black solid 1px;
   display: block;
-  width: 100%;
+  /* Paper.js sets inline dimensions for high-density displays. Keep layout
+     sizing in CSS so a redraw cannot feed the border-box width back into the
+     next canvas measurement and shrink it by two pixels. */
+  width: 100% !important;
+  height: auto !important;
   aspect-ratio: 2 / 1;
 }
 

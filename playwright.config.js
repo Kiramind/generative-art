@@ -40,6 +40,15 @@ export default defineConfig({
         hasTouch: true,
       },
     },
+    {
+      name: 'high-density',
+      testMatch: /canvas-layout\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1024, height: 768 },
+        deviceScaleFactor: 2,
+      },
+    },
   ],
   webServer: {
     command: 'npm run preview -- --host 127.0.0.1 --port 4173',
